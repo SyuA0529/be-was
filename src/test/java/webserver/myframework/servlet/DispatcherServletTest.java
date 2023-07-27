@@ -205,12 +205,12 @@ class DispatcherServletTest {
     public static class TestController {
         @RequestMapping("/exist")
         public void existHandler(HttpRequest request, HttpResponse response) {
-            response.setUri("/css/styles.css");
+            response.forward("/css/styles.css");
         }
 
         @RequestMapping("/notExist")
         public void notExistHandler(HttpRequest request, HttpResponse response) {
-            response.setUri("/notExist/notExist");
+            response.forward("/notExist/notExist");
         }
 
         @RequestMapping("/createSession")

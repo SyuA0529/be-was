@@ -65,7 +65,7 @@ class RequestHandlerImplTest {
         @SuppressWarnings("unused")
         void testMethod(HttpRequest httpRequest, HttpResponse httpResponse) {
             httpRequest.getUri();
-            httpResponse.setUri("string");
+            httpResponse.forward("string");
         }
     }
 }

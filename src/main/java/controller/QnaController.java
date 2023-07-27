@@ -30,7 +30,7 @@ public class QnaController {
 
         User user = UserTable.findUserById((String) session.getAttribute("userId"));
         model.addParameter("user", user);
-        httpResponse.setUri("/qna/write.html");
+        httpResponse.forward("/qna/write.html");
     }
 
     @RequestMapping(value = "/write", method = HttpMethod.POST)
@@ -64,10 +64,10 @@ public class QnaController {
         Post post = PostTable.findByPostId(postId);
         if(post == null) {
             httpResponse.setStatus(HttpStatus.NOT_FOUND);
-            httpResponse.setUri("notExist");
+            httpResponse.forward("notExist");
             return;
         }
         model.addParameter("postDto", new PostFrontDto(post));
-        httpResponse.setUri("/qna/show.html");
+        httpResponse.forward("/qna/show.html");
     }
 }

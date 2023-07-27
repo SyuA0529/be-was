@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class HttpResponse {
     public static final String NOT_RENDER_URI = "NOT_RENDER_URI";
 
-    public abstract void setUri(String uri);
+    public abstract void forward(String uri);
 
     public abstract String getUri();
 

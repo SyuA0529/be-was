@@ -25,7 +25,7 @@ public class StaticController {
             model.addParameter("user", user);
         }
         model.addParameter("postDtos", getAllPostDtos(model));
-        httpResponse.setUri("/index.html");
+        httpResponse.forward("/index.html");
     }
 
     private static List<PostFrontDto> getAllPostDtos(Model model) {

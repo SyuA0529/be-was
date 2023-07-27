@@ -68,6 +68,6 @@ public class UserController {
         User user = UserTable.findUserById((String) session.getAttribute("userId"));
         model.addParameter("user", user);
         model.addParameter("users", new ArrayList<>(UserTable.findAll()));
-        httpResponse.setUri("/user/list.html");
+        httpResponse.forward("/user/list.html");
     }
 }

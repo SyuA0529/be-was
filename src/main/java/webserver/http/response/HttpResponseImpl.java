@@ -17,7 +17,7 @@ public class HttpResponseImpl extends HttpResponse {
     private byte[] body = new byte[0];
 
     @Override
-    public void setUri(String uri) {
+    public void forward(String uri) {
         this.uri = uri;
     }
 
