@@ -23,6 +23,9 @@ import webserver.myframework.session.Session;
 import webserver.myframework.session.SessionManager;
 import webserver.myframework.session.SessionManagerImpl;
 import webserver.myframework.view.ViewResolverImpl;
+import webserver.myframework.view.content.DynamicContentRenderer;
+import webserver.myframework.view.content.MultipleObjectDynamicContent;
+import webserver.myframework.view.content.SingleObjectDynamicContent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,6 +38,8 @@ import static org.assertj.core.api.Assertions.*;
 class DispatcherServletTest {
     String RESOURCE_URI = "src/main/resources";
     DispatcherServlet dispatcherServlet;
+    DynamicContentRenderer dynamicContentRenderer =
+            new DynamicContentRenderer(new SingleObjectDynamicContent(), new MultipleObjectDynamicContent());
     static ArgumentResolver argumentResolver = new ArgumentResolverImpl();
 
     @BeforeEach
@@ -46,7 +51,7 @@ class DispatcherServletTest {
                 getTestRequestInfo("/notExist"), getTestHandler("notExistHandler"));
         handlerResolver.registerHandler(
                 getTestRequestInfo("/createSession"), getTestHandler("createSessionHandler"));
-        dispatcherServlet = new DispatcherServlet(handlerResolver, new ViewResolverImpl());
+        dispatcherServlet = new DispatcherServlet(handlerResolver, new ViewResolverImpl(dynamicContentRenderer));
     }
 
     private static RequestInfo getTestRequestInfo(String uri) {

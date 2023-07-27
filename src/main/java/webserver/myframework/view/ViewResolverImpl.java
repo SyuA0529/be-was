@@ -2,6 +2,7 @@ package webserver.myframework.view;
 
 import webserver.myframework.bean.annotation.Component;
 import webserver.myframework.model.Model;
+import webserver.myframework.view.content.DynamicContentRenderer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +15,13 @@ public class ViewResolverImpl implements ViewResolver {
     private static final String DYNAMIC_VIEW = "/templates";
     private static final String STATIC_VIEW = "/static";
     private static final String DEFAULT_VIEW_PATH = "/errors/404.html";
+
+    private final DynamicContentRenderer dynamicContentRenderer;
+
+    public ViewResolverImpl(DynamicContentRenderer dynamicContentRenderer) {
+        this.dynamicContentRenderer = dynamicContentRenderer;
+    }
+
 
     @Override
     public View resolve(String viewUri, Model model) throws IOException {
@@ -30,11 +38,11 @@ public class ViewResolverImpl implements ViewResolver {
         return new StaticView(new File(RESOURCE_PREFIX + DYNAMIC_VIEW + DEFAULT_VIEW_PATH));
     }
 
-    private static View getTemplateResourceView(Model model, File dynamicFile) throws IOException {
+    private View getTemplateResourceView(Model model, File dynamicFile) throws IOException {
         try(FileInputStream fileInputStream = new FileInputStream(dynamicFile)) {
             String fileStart = new String(fileInputStream.readNBytes(16), StandardCharsets.UTF_8);
             if (fileStart.startsWith("{DYNAMIC_RENDER}")) {
-                return new DynamicView(dynamicFile, model);
+                return new DynamicView(dynamicFile, model, dynamicContentRenderer);
             }
             return new StaticView(dynamicFile);
         }

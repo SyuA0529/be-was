@@ -4,6 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import webserver.myframework.model.ModelImpl;
+import webserver.myframework.view.content.DynamicContentRenderer;
+import webserver.myframework.view.content.MultipleObjectDynamicContent;
+import webserver.myframework.view.content.SingleObjectDynamicContent;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +17,9 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("ViewResolverImpl 테스트")
 class ViewResolverImplTest {
-    final ViewResolver viewResolver = new ViewResolverImpl();
+    final DynamicContentRenderer dynamicContentRenderer =
+            new DynamicContentRenderer(new SingleObjectDynamicContent(), new MultipleObjectDynamicContent());
+    final ViewResolver viewResolver = new ViewResolverImpl(dynamicContentRenderer);
 
     @Nested
     @DisplayName("resolve method")

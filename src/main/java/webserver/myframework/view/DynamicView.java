@@ -3,7 +3,7 @@ package webserver.myframework.view;
 import webserver.myframework.model.Model;
 import webserver.myframework.utils.FileUtils;
 import webserver.myframework.utils.StringUtils;
-import webserver.myframework.view.content.DynamicContent;
+import webserver.myframework.view.content.DynamicContentRenderer;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +16,12 @@ public class DynamicView implements View {
     private static final String INTERNAL_SERVER_ERROR_PAGE = "src/main/resources/templates/errors/500.html";
     private final File viewFile;
     private final Model model;
+    private final DynamicContentRenderer dynamicContentRenderer;
 
-    public DynamicView(File viewFile, Model model) {
+    public DynamicView(File viewFile, Model model, DynamicContentRenderer dynamicContentRenderer) {
         this.viewFile = viewFile;
         this.model = model;
+        this.dynamicContentRenderer = dynamicContentRenderer;
     }
 
     @Override
@@ -43,7 +45,8 @@ public class DynamicView implements View {
         return stringBuilder.toString().getBytes(StandardCharsets.UTF_8);
     }
 
-    private void writeDynamicFile(StringBuilder stringBuilder, List<String> fileContents) throws NoSuchFieldException, IllegalAccessException {
+    private void writeDynamicFile(StringBuilder stringBuilder,
+                                  List<String> fileContents) throws NoSuchFieldException, IllegalAccessException {
         for (String fileContent : fileContents) {
             if (fileContent.startsWith("{{") && fileContent.endsWith("}}")) {
                 stringBuilder.append(writeDynamicContent(fileContent));
@@ -53,17 +56,17 @@ public class DynamicView implements View {
         }
     }
 
-    private String writeDynamicContent(String fileContent) throws NoSuchFieldException, IllegalAccessException {
+    private String writeDynamicContent(String fileContent)
+            throws NoSuchFieldException, IllegalAccessException {
         String[] objectContents = fileContent.replaceAll("[{}]", "")
                 .split(",");
         for (String objectContent : objectContents) {
             String[] objectAndContent = objectContent.split("::");
             String objectName = objectAndContent[0].trim();
-            DynamicContent dynamicContent = DynamicContent.getDynamicContent(model, objectName, objectAndContent[1]);
-            if (dynamicContent == null) {
-                continue;
+            String renderedContent = dynamicContentRenderer.renderContent(model, objectName, objectAndContent[1]);
+            if(renderedContent != null) {
+                return renderedContent;
             }
-            return dynamicContent.render();
         }
         throw new IllegalArgumentException();
     }

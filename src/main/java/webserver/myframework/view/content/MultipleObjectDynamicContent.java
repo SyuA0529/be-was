@@ -1,18 +1,18 @@
 package webserver.myframework.view.content;
 
+import webserver.myframework.bean.annotation.Component;
+import webserver.myframework.model.Model;
+
 import java.util.List;
 
+@Component
 public class MultipleObjectDynamicContent extends DynamicContent {
-    private final List<Object> parameters;
-    private final List<String> contentParts;
 
-    public MultipleObjectDynamicContent(List<Object> parameters, List<String> contentParts) {
-        this.parameters = parameters;
-        this.contentParts = contentParts;
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
-    public String render() throws NoSuchFieldException, IllegalAccessException {
+    public String render(Model model, String objectName, List<String> contentParts) throws NoSuchFieldException, IllegalAccessException {
+        objectName = objectName.replace("list-", "");
+        List<Object> parameters = (List<Object>) model.getParameter(objectName);
         StringBuilder stringBuilder = new StringBuilder();
         for (Object parameter : parameters) {
             writeParameterContent(stringBuilder, contentParts, parameter);

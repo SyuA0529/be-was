@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import webserver.myframework.model.Model;
 import webserver.myframework.model.ModelImpl;
+import webserver.myframework.view.content.DynamicContentRenderer;
+import webserver.myframework.view.content.MultipleObjectDynamicContent;
+import webserver.myframework.view.content.SingleObjectDynamicContent;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +23,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("DynamicView 테스트")
 public class DynamicViewTest {
+    DynamicContentRenderer dynamicContentRenderer =
+            new DynamicContentRenderer(new SingleObjectDynamicContent(), new MultipleObjectDynamicContent());
     static String expectContent = "Hello,\n" +
                                   " My Name Is syua\n" +
                                   "Nice to Meet you\n" +
@@ -53,7 +58,8 @@ public class DynamicViewTest {
            Model model = new ModelImpl();
            model.addParameter("user", user);
            model.addParameter("users", new ArrayList<>(UserTable.findAll()));
-           DynamicView dynamicView = new DynamicView(new File("src/test/resources/DynamicViewTestFile"), model);
+           DynamicView dynamicView = new DynamicView(
+                   new File("src/test/resources/DynamicViewTestFile"), model, dynamicContentRenderer);
 
            //when
            byte[] byteContent = dynamicView.render();
